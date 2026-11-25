@@ -4,22 +4,24 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Preparando aplicación Hello World...'
-                sh 'test -f hello.py'
+                echo 'Compilando y verificando la aplicación...'
+                sh 'python3 -m py_compile hello.py test_hello.py'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Verificando el código...'
-                sh "grep -q 'Hello World!' hello.py"
-                echo 'Prueba completada correctamente.'
+                echo 'Ejecutando pruebas unitarias...'
+                sh 'python3 -m unittest -v'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Despliegue simulado en entorno de prueba.'
+                echo 'Desplegando aplicación en entorno de prueba...'
+                sh 'mkdir -p deploy-test'
+                sh 'cp hello.py deploy-test/'
+                sh 'python3 deploy-test/hello.py'
             }
         }
     }
